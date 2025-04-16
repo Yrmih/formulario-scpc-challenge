@@ -1,4 +1,4 @@
-import FormCapacitacao from "@/app/components/shared/FormCapacitacao";
+import FormCapacitacao from "../../components/shared/FormCapacitacao"
 
 
 export default function CapacitacaoFormPage(){

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { formSchema, FormData } from "@/app/schemas/formValidation";
+import { formSchema, FormData } from '../../schemas/formValidation';
 // import { Button } from '@/components/ui/button';
 
 // depois eu tenho que separar os imports dos componentes ui do shadcn
@@ -10,9 +10,10 @@ import { useForm, SubmitHandler } from 'react-hook-form'; //importando o useform
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectItem } from '@/components/ui/select';
+import { SelectContent, SelectTrigger, SelectValue } from '@radix-ui/react-select';
 
 export default function FormCapacitacao() {
-    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+    const { register, handleSubmit,  setValue, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(formSchema),
     });
 
@@ -29,39 +30,56 @@ export default function FormCapacitacao() {
             <div>
                 <label htmlFor="diretoria" className="block text-sm font-medium text-gray-700"></label>
                 <Select 
-                    {...register("diretoria")}
-                    {...errors.diretoria && <span className='text-red-500 text-m'>{errors.diretoria.message}</span>}
+                    onValueChange={(value) => setValue("diretoria", value)}
                 >
-                
+                    <SelectTrigger>
+                        <SelectValue placeholder="Selecione a diretoria" />
+                    </SelectTrigger>
+
+                <SelectContent>
                     <SelectItem value='dark' >Diretoria 1</SelectItem>
                     <SelectItem value='dark'>Diretoria 2</SelectItem>
                     <SelectItem value='dark'>Diretoria 3</SelectItem>
+                </SelectContent>
                 </Select>
+                {errors.diretoria && <span className="text-red-500">{errors.diretoria.message}</span>}
             </div>
             {/* Área do Conhecimento (Select) */}
             <div>
                 <label htmlFor="areadoconhecimento"></label>
                 <Select
-                    {...register("areaConhecimento")}
-                    {...errors.areaConhecimento && <span className=''>{errors.areaConhecimento.message}</span>}
-
+                    onValueChange={(value) => setValue("areaConhecimento", value)}
+                    // {...register("areaConhecimento")}
+                    // {...errors.areaConhecimento && <span className=''>{errors.areaConhecimento.message}</span>}
                 >
+                <SelectTrigger>
+                    <SelectValue placeholder="Selecione a área do conhecimento"/>
+                </SelectTrigger>
+
+                <SelectContent>
                     <SelectItem value='dark'>Área 1</SelectItem>
                     <SelectItem value='dark'>Área 2</SelectItem>
                     <SelectItem value='dark'>Área 3</SelectItem>
+                    </SelectContent>
                 </Select>
+                {errors.areaConhecimento && <span className=''>{errors.areaConhecimento.message}</span>}
             </div>
             {/* Tipo de Evento (Select) */}
             <div>
                 <label htmlFor="tipoEvento"></label>
                 <Select
-                    {...register("tipoEvento")}
-                    {...errors.areaConhecimento && <span className=''>{errors.areaConhecimento.message}</span>}
+                   onValueChange={(value) => setValue("tipoEvento",value)}
                 >
+                <SelectTrigger>
+                    <SelectValue placeholder="Selecione o tipo de Evento" />
+                </SelectTrigger>
+                <SelectContent>
                     <SelectItem value="dark">Evento 1</SelectItem>
                     <SelectItem value="dark">Evento 2</SelectItem>
                     <SelectItem value="dark">Evento 3</SelectItem>
+                </SelectContent>
                 </Select >
+                {errors.areaConhecimento && <span className=''>{errors.areaConhecimento.message}</span>}
             </div>
             {/* Título do Evento (TextField) */}
             <div>
