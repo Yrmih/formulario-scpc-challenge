@@ -2,152 +2,118 @@
 
 import React from 'react';
 import { formSchema, FormData } from '../../schemas/formValidation';
-// import { Button } from '@/components/ui/button';
 
-// depois eu tenho que separar os imports dos componentes ui do shadcn
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, SubmitHandler } from 'react-hook-form'; //importando o useform e o submitHandler
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectItem } from '@/components/ui/select';
-import { SelectContent, SelectTrigger, SelectValue } from '@radix-ui/react-select';
+import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from '@/components/ui/select';
 
 export default function FormCapacitacao() {
-    const { register, handleSubmit,  setValue, formState: { errors } } = useForm<FormData>({
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(formSchema),
     });
 
     const onSubmit: SubmitHandler<FormData> = (data) => {
         console.log(data);
     };
-    // const form = useForm<z.infer<typeof formSchema>>({  eu poderia usar essa alternativa chamada de "tipo inline" sem nem precisar exportar...
-    //     resolver: zodResolver(formSchema),  ...o FormData
-    //   });
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4 max-w-lg mx-auto bg-white rounded-md shadow-lg">
+        <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 p-4 max-w-4xl mx-auto bg-white rounded-md shadow-lg">
             {/* Diretoria (Select) */}
-            <div>
-                <label htmlFor="diretoria" className="block text-sm font-medium text-gray-700"></label>
-                <Select 
-                    onValueChange={(value) => setValue("diretoria", value)}
-                >
+            <div className="col-span-1">
+                <label htmlFor="diretoria" className="block text-sm font-medium text-gray-700">Diretoria</label>
+                <Select onValueChange={(value) => setValue("diretoria", value)}>
                     <SelectTrigger>
                         <SelectValue placeholder="Selecione a diretoria" />
                     </SelectTrigger>
-
-                <SelectContent>
-                    <SelectItem value='dark' >Diretoria 1</SelectItem>
-                    <SelectItem value='dark'>Diretoria 2</SelectItem>
-                    <SelectItem value='dark'>Diretoria 3</SelectItem>
-                </SelectContent>
-                </Select>
-                {errors.diretoria && <span className="text-red-500">{errors.diretoria.message}</span>}
-            </div>
-            {/* Área do Conhecimento (Select) */}
-            <div>
-                <label htmlFor="areadoconhecimento"></label>
-                <Select
-                    onValueChange={(value) => setValue("areaConhecimento", value)}
-                    // {...register("areaConhecimento")}
-                    // {...errors.areaConhecimento && <span className=''>{errors.areaConhecimento.message}</span>}
-                >
-                <SelectTrigger>
-                    <SelectValue placeholder="Selecione a área do conhecimento"/>
-                </SelectTrigger>
-
-                <SelectContent>
-                    <SelectItem value='dark'>Área 1</SelectItem>
-                    <SelectItem value='dark'>Área 2</SelectItem>
-                    <SelectItem value='dark'>Área 3</SelectItem>
+                    <SelectContent>
+                        <SelectItem value='diretoria1'>Diretoria 1</SelectItem>
+                        <SelectItem value='diretoria2'>Diretoria 2</SelectItem>
+                        <SelectItem value='diretoria3'>Diretoria 3</SelectItem>
                     </SelectContent>
                 </Select>
-                {errors.areaConhecimento && <span className=''>{errors.areaConhecimento.message}</span>}
+                {errors.diretoria && <span className="text-red-500 text-sm">{errors.diretoria.message}</span>}
             </div>
+
+            {/* Área do Conhecimento (Select) */}
+            <div className="col-span-1">
+                <label htmlFor="areaConhecimento" className="block text-sm font-medium text-gray-700">Área do Conhecimento</label>
+                <Select onValueChange={(value) => setValue("areaConhecimento", value)}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Selecione a área do conhecimento" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value='area1'>Área 1</SelectItem>
+                        <SelectItem value='area2'>Área 2</SelectItem>
+                        <SelectItem value='area3'>Área 3</SelectItem>
+                    </SelectContent>
+                </Select>
+                {errors.areaConhecimento && <span className="text-red-500 text-sm">{errors.areaConhecimento.message}</span>}
+            </div>
+
             {/* Tipo de Evento (Select) */}
-            <div>
-                <label htmlFor="tipoEvento"></label>
-                <Select
-                   onValueChange={(value) => setValue("tipoEvento",value)}
-                >
-                <SelectTrigger>
-                    <SelectValue placeholder="Selecione o tipo de Evento" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="dark">Evento 1</SelectItem>
-                    <SelectItem value="dark">Evento 2</SelectItem>
-                    <SelectItem value="dark">Evento 3</SelectItem>
-                </SelectContent>
-                </Select >
-                {errors.areaConhecimento && <span className=''>{errors.areaConhecimento.message}</span>}
+            <div className="col-span-1">
+                <label htmlFor="tipoEvento" className="block text-sm font-medium text-gray-700">Tipo de Evento</label>
+                <Select onValueChange={(value) => setValue("tipoEvento", value)}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Selecione o tipo de Evento" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="evento1">Evento 1</SelectItem>
+                        <SelectItem value="evento2">Evento 2</SelectItem>
+                        <SelectItem value="evento3">Evento 3</SelectItem>
+                    </SelectContent>
+                </Select>
+                {errors.tipoEvento && <span className="text-red-500 text-sm">{errors.tipoEvento.message}</span>}
             </div>
-            {/* Título do Evento (TextField) */}
-            <div>
-                <label htmlFor="tituloEvento"></label>
-                <Input id="tituloEvento"
-                    type="text"
-                    {...register('tituloEvento')}
-                    className="mt-1"
-                />
+
+            {/* Título do Evento */}
+            <div className="col-span-1">
+                <label htmlFor="tituloEvento" className="block text-sm font-medium text-gray-700">Título do Evento</label>
+                <Input id="tituloEvento" type="text" {...register('tituloEvento')} />
+                {errors.tituloEvento && <span className="text-red-500 text-sm">{errors.tituloEvento.message}</span>}
             </div>
-            {/* Carga Horária (TextField) */}
-            <div>
-                <label htmlFor="cargaHoraria"></label>
-                <Input id="cargaHoraria"
-                    type="text"
-                    {...register('cargaHoraria')}
-                    className="mt-1"
-                />
+
+            {/* Carga Horária */}
+            <div className="col-span-1">
+                <label htmlFor="cargaHoraria" className="block text-sm font-medium text-gray-700">Carga Horária</label>
+                <Input id="cargaHoraria" type="text" {...register('cargaHoraria')} />
+                {errors.cargaHoraria && <span className="text-red-500 text-sm">{errors.cargaHoraria.message}</span>}
             </div>
-            {/* Nome da Instituição (TextField) */}
-            <div>
-                <label htmlFor="instituicao"></label>
-                <Input id="instituicao"
-                    type="text"
-                    {...register('instituicao')}
-                    className="mt-1"
-                />
+
+            {/* Nome da Instituição */}
+            <div className="col-span-2">
+                <label htmlFor="instituicao" className="block text-sm font-medium text-gray-700">Instituição</label>
+                <Input id="instituicao" type="text" {...register('instituicao')} />
+                {errors.instituicao && <span className="text-red-500 text-sm">{errors.instituicao.message}</span>}
             </div>
-            {/* Data do início da Capacitação (TextField) */}
-            <div>
-                <label htmlFor="dataInicio"></label>
-                <Input id="dataInicio"
-                    type="text"
-                    {...register('dataInicio')}
-                    className="mt-1"
-                />
+
+            {/* Datas */}
+            <div className="col-span-1">
+                <label htmlFor="dataInicio" className="block text-sm font-medium text-gray-700">Data Início</label>
+                <Input id="dataInicio" type="date" {...register('dataInicio')} />
             </div>
-            {/* Data do fim da Capacitação (TextField) */}
-            <div>
-                <label htmlFor="dataFim"></label>
-                <Input id="dataFim"
-                    type="text"
-                    {...register('dataFim')}
-                    className="mt-1" />
+            <div className="col-span-1">
+                <label htmlFor="dataFim" className="block text-sm font-medium text-gray-700">Data Fim</label>
+                <Input id="dataFim" type="date" {...register('dataFim')} />
             </div>
-            {/* Data da Expiração da Capacitação (TextField) */}
-            <div>
-                <label htmlFor="dataExpiracao"></label>
-                <Input id="dataExpiracao"
-                    type="text"
-                    {...register('dataExpiracao')}
-                    className="mt-1"
-                />
+
+            <div className="col-span-2">
+                <label htmlFor="dataExpiracao" className="block text-sm font-medium text-gray-700">Data de Expiração</label>
+                <Input id="dataExpiracao" type="date" {...register('dataExpiracao')} />
             </div>
-            {/* Certificado (Campo de Arquivo) */}
-            <div>
-                <label htmlFor="certificado"></label>
-                <Input id="certificado"
-                    type="text"
-                    {...register('certificado')}
-                    className="mt-1"
-                />
+
+            {/* Certificado */}
+            <div className="col-span-2">
+                <label htmlFor="certificado" className="block text-sm font-medium text-gray-700">Certificado</label>
+                <Input id="certificado" type="text" {...register('certificado')} />
             </div>
-            {/* Botão de salvar*/}
-            <div>
-                <Button type="submit" className="w-full mt-4">Salvar</Button>
+
+            {/* Botão */}
+            <div className="col-span-2">
+                <Button type="submit" className="w-full mt-4 bg-green-600 hover:bg-green-500 text-white">Salvar</Button>
             </div>
         </form>
     );
 };
-

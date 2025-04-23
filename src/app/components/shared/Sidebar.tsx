@@ -1,9 +1,9 @@
 'use client';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFolder, faDollarSign, faGraduationCap, faChartBar, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faFolder, faDollarSign, faGraduationCap, faChartBar, faCog, faAngleLeft, faAngleRight} from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react';
-import Link from 'next/link';  // Link do Next.js
+import Link from 'next/link'; 
 import { usePathname } from 'next/navigation';  // Hook para pegar o pathname
 import { cn } from '@/lib/utils';  // Função cn para manipulação de classes
 
@@ -31,7 +31,7 @@ export default function Sidebar() {
       <div className='p-4 flex justify-between items-center'>
         {!collapsed && <span className="text-lg font-bold">Menu</span>}
         <button onClick={() => setCollapsed(!collapsed)} className="text-sm">
-          {collapsed ? '=>' : '<='}
+          <FontAwesomeIcon icon={collapsed ? faAngleLeft : faAngleRight} />
         </button>
       </div>
 
