@@ -1,21 +1,43 @@
-'use client';
-
 import React from 'react';
-import { formSchema, FormData } from '../../schemas/formValidation';
-
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { formSchema, CapacitacaoFormData } from '../../schemas/formValidation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from '@/components/ui/select';
+import { postCadastrarCapacitacao } from '../../services/api/capacitacao/postCadastrarCapacitacao';
 
 export default function FormCapacitacao() {
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm<FormData>({
+    const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<CapacitacaoFormData>({
         resolver: zodResolver(formSchema),
     });
 
-    const onSubmit: SubmitHandler<FormData> = (data) => {
-        console.log(data);
+    const onSubmit: SubmitHandler<CapacitacaoFormData> = async (formData) => {
+        const file = formData.certificado[0];
+
+        const data = new FormData();
+        data.append('diretoria', formData.diretoria);
+        data.append('areaConhecimento', formData.areaConhecimento);
+        data.append('tipoEvento', formData.tipoEvento);
+        data.append('tituloEvento', formData.tituloEvento);
+        data.append('cargaHoraria', formData.cargaHoraria);
+        data.append('instituicao', formData.instituicao);
+        data.append('dataInicio', formData.dataInicio);
+        data.append('dataFim', formData.dataFim);
+        data.append('dataExpiracao', formData.dataExpiracao);
+        data.append('certificado', file);
+        data.append('nome', formData.nome);
+        data.append('email', formData.email);
+        data.append('idade', formData.idade.toString());
+
+        try {
+            await postCadastrarCapacitacao(data);
+            alert('Capacitação cadastrada com sucesso!');
+            reset();
+        } catch (error) {
+            console.error('Erro ao enviar:', error);
+            alert('Erro ao cadastrar capacitação.');
+        }
     };
 
     return (
@@ -107,7 +129,7 @@ export default function FormCapacitacao() {
             {/* Certificado */}
             <div className="col-span-2">
                 <label htmlFor="certificado" className="block text-sm font-medium text-gray-700">Certificado</label>
-                <Input id="certificado" type="text" {...register('certificado')} />
+                <Input id="certificado" type="file" {...register('certificado')} />
             </div>
 
             {/* Botão */}
@@ -116,4 +138,4 @@ export default function FormCapacitacao() {
             </div>
         </form>
     );
-};
+}

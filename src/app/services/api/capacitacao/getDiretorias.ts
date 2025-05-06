@@ -1,6 +1,4 @@
 
-
-
 export async function getDiretorias() {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_SCPC_URL}/diretoria`, {
         method: 'GET',
