@@ -9,8 +9,8 @@ export class ObjectUtils {
           const value = (obj as Record<string, unknown>)[key];
   
           const parent = Number.isNaN(Number(key))
-            ? ${parentKey}.${key}
-            : ${parentKey}[${key}];
+            ? `${parentKey}.${key}`
+            : `${parentKey}[${key}]`;
   
           const fieldName = parentKey ? parent : key;
   

@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -6,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from '@/components/ui/select';
 import { postCadastrarCapacitacao } from '../../services/api/capacitacao/postCadastrarCapacitacao';
+import { ObjectUtils } from '../../utils/objectsUtils';
+
 
 export default function FormCapacitacao() {
     const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<CapacitacaoFormData>({
@@ -15,34 +18,38 @@ export default function FormCapacitacao() {
     const onSubmit: SubmitHandler<CapacitacaoFormData> = async (formData) => {
         const file = formData.certificado[0];
 
-        const data = new FormData();
-        data.append('diretoria', formData.diretoria);
-        data.append('areaConhecimento', formData.areaConhecimento);
-        data.append('tipoEvento', formData.tipoEvento);
-        data.append('tituloEvento', formData.tituloEvento);
-        data.append('cargaHoraria', formData.cargaHoraria);
-        data.append('instituicao', formData.instituicao);
-        data.append('dataInicio', formData.dataInicio);
-        data.append('dataFim', formData.dataFim);
-        data.append('dataExpiracao', formData.dataExpiracao);
-        data.append('certificado', file);
-        data.append('nome', formData.nome);
-        data.append('email', formData.email);
-        data.append('idade', formData.idade.toString());
-
-        try {
-            await postCadastrarCapacitacao(data);
+        const formattedData = ObjectUtils.objectToFormData({
+            diretoria: formData.diretoria,
+            areaConhecimento: formData.areaConhecimento,
+            tipoEvento: formData.tipoEvento,
+            tituloEvento: formData.tituloEvento,
+            cargaHoraria: formData.cargaHoraria,
+            instituicao: formData.instituicao,
+            dataInicio: formData.dataInicio,
+            dataFim: formData.dataFim,
+            dataExpiracao: formData.dataExpiracao,
+            certificado: file,
+            nome: formData.nome,
+            email: formData.email,
+            idade: formData.idade,
+          });
+        
+          try {
+            await postCadastrarCapacitacao(formattedData);
             alert('Capacitação cadastrada com sucesso!');
             reset();
-        } catch (error) {
+            if (onSucess) {
+                onSucess(Response);
+            }
+          } catch (error) {
             console.error('Erro ao enviar:', error);
             alert('Erro ao cadastrar capacitação.');
-        }
-    };
+          }
+        };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 p-4 max-w-4xl mx-auto bg-white rounded-md shadow-lg">
-            {/* Diretoria (Select) */}
+            {/* Diretoria */}
             <div className="col-span-1">
                 <label htmlFor="diretoria" className="block text-sm font-medium text-gray-700">Diretoria</label>
                 <Select onValueChange={(value) => setValue("diretoria", value)}>
@@ -58,7 +65,7 @@ export default function FormCapacitacao() {
                 {errors.diretoria && <span className="text-red-500 text-sm">{errors.diretoria.message}</span>}
             </div>
 
-            {/* Área do Conhecimento (Select) */}
+            {/* Área do Conhecimento */}
             <div className="col-span-1">
                 <label htmlFor="areaConhecimento" className="block text-sm font-medium text-gray-700">Área do Conhecimento</label>
                 <Select onValueChange={(value) => setValue("areaConhecimento", value)}>
@@ -74,7 +81,7 @@ export default function FormCapacitacao() {
                 {errors.areaConhecimento && <span className="text-red-500 text-sm">{errors.areaConhecimento.message}</span>}
             </div>
 
-            {/* Tipo de Evento (Select) */}
+            {/* Tipo de Evento */}
             <div className="col-span-1">
                 <label htmlFor="tipoEvento" className="block text-sm font-medium text-gray-700">Tipo de Evento</label>
                 <Select onValueChange={(value) => setValue("tipoEvento", value)}>
@@ -130,6 +137,27 @@ export default function FormCapacitacao() {
             <div className="col-span-2">
                 <label htmlFor="certificado" className="block text-sm font-medium text-gray-700">Certificado</label>
                 <Input id="certificado" type="file" {...register('certificado')} />
+            </div>
+
+            {/* Nome */}
+            <div className="col-span-2">
+                <label htmlFor="nome" className="block text-sm font-medium text-gray-700">Nome</label>
+                <Input id="nome" type="text" {...register('nome')} />
+                {errors.nome && <span className="text-red-500 text-sm">{errors.nome.message}</span>}
+            </div>
+
+            {/* Email */}
+            <div className="col-span-2">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                <Input id="email" type="email" {...register('email')} />
+                {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
+            </div>
+
+            {/* Idade */}
+            <div className="col-span-1">
+                <label htmlFor="idade" className="block text-sm font-medium text-gray-700">Idade</label>
+                <Input id="idade" type="number" {...register('idade', { valueAsNumber: true })} />
+                {errors.idade && <span className="text-red-500 text-sm">{errors.idade.message}</span>}
             </div>
 
             {/* Botão */}
