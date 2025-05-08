@@ -3,17 +3,31 @@ import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { formSchema, CapacitacaoFormData } from '../../schemas/formValidation';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from '@/components/ui/select';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from '../../components/ui/select';
 import { postCadastrarCapacitacao } from '../../services/api/capacitacao/postCadastrarCapacitacao';
 import { ObjectUtils } from '../../utils/objectsUtils';
+import { AlertTriangle } from 'lucide-react';
 
+interface IpostResponse {
+    sucess: boolean;
+    message: string;
+    data?: unknown;
+}
 
 export default function FormCapacitacao() {
     const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<CapacitacaoFormData>({
         resolver: zodResolver(formSchema),
     });
+
+    const onSucess = (response: IpostResponse) => {
+        console.log('Sucesso:', response);
+
+        if (response.sucess) {
+            alert('Capacitação cadastrada com sucesso!');
+        }
+    };
 
     const onSubmit: SubmitHandler<CapacitacaoFormData> = async (formData) => {
         const file = formData.certificado[0];
@@ -32,20 +46,21 @@ export default function FormCapacitacao() {
             nome: formData.nome,
             email: formData.email,
             idade: formData.idade,
-          });
-        
-          try {
-            await postCadastrarCapacitacao(formattedData);
+        });
+
+        try {
+            const response = await postCadastrarCapacitacao(formattedData);
+            
+            // Passa a resposta corretamente para a função onSucess
+            onSucess(response);
+            
             alert('Capacitação cadastrada com sucesso!');
             reset();
-            if (onSucess) {
-                onSucess(Response);
-            }
-          } catch (error) {
+        } catch (error) {
             console.error('Erro ao enviar:', error);
             alert('Erro ao cadastrar capacitação.');
-          }
-        };
+        }
+    };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 p-4 max-w-4xl mx-auto bg-white rounded-md shadow-lg">
@@ -62,6 +77,7 @@ export default function FormCapacitacao() {
                         <SelectItem value='diretoria3'>Diretoria 3</SelectItem>
                     </SelectContent>
                 </Select>
+                <AlertTriangle className="w-4 h-4 mr-1" />
                 {errors.diretoria && <span className="text-red-500 text-sm">{errors.diretoria.message}</span>}
             </div>
 

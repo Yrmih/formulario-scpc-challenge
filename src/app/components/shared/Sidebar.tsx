@@ -4,13 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFolder, faDollarSign, faGraduationCap, faChartBar, faCog, faAngleLeft, faAngleRight} from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react';
 import Link from 'next/link'; 
-import { usePathname } from 'next/navigation';  // Hook para pegar o pathname
-import { cn } from '@/lib/utils';  // Função cn para manipulação de classes
+import { usePathname } from 'next/navigation';  
+import { cn } from '@/lib/utils';  // Função cn para manipulação de classes 
 
 export default function Sidebar() {
   console.log('teste!!!')
-  const [collapsed, setCollapsed] = useState(false);  // Estado para colapsar a sidebar
-  const pathname = usePathname();  // Pega o caminho da URL atual
+  const [collapsed, setCollapsed] = useState(false);  
+  const pathname = usePathname();  
 
   // Links do menu
   const links = [

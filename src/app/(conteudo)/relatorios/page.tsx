@@ -1,13 +1,10 @@
-'use client';
+import RelatorioCapacitacoes from "../../components/shared/dataTableRelatorio";
 
-import RelatoriosServidores from "../../components/shared/dataTableRelatorio";
-
-export default function RelatoriosPage(){
-    return(
-        <div>
-            <h1>Relatórios</h1>
-            <p>Esta página está em construção.</p>
-            <RelatoriosServidores />
-        </div>
-    )
+export default function Relatorios() {
+  return (
+    <div className="p-4 max-w-4xl mx-auto">
+      <h1 className="text-xl font-bold mb-4"></h1>
+      <RelatorioCapacitacoes />
+    </div>
+  );
 }
