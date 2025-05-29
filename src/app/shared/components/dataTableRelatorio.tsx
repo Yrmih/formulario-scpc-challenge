@@ -1,93 +1,88 @@
-'use client';
+"use client";
 
-import { relatorioFilterSchema, relatorioFilterSchemaData } from "../../schemas/relatorioFilterSchema";
-import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "../ui/input";
+import { useEffect, useState } from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { Button } from "../ui/button";
-import { Select, SelectTrigger, SelectItem, SelectValue, SelectContent } from "../ui/select";
+import Link from "next/link";
+import { getCapacitacao } from "../../services/CapacitacaoServices";
+import { Capacitacao } from "../../interface/interface";
 
-const mockData = [
-    { id: 1, name: 'Noemy Amorim', description: 'Descrição do Relatório 1', tipo: 'Relatório de Servidores', data: '2023-10-01', status: 'Aprovado' },
-    { id: 2, name: 'Héctor', description: 'Descrição do Relatório 2', tipo: 'Relatório de Servidores', data: '2023-10-02', status: 'Aprovado' },
-    { id: 3, name: 'Caio', description: 'Descrição do Relatório 3', tipo: 'Relatório de Servidores', data: '2023-10-03', status: 'Rejeitado' },
-    { id: 4, name: 'Pietro', description: 'Descrição do Relatório 4', tipo: 'Relatório de Servidores', data: '2023-10-04', status: 'Pendente' },
-];
+export default function ListagemCapacitacoes() {
+  const [dados, setDados] = useState<Capacitacao[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-export default function RelatoriosServidores() {
-    const [relatoriosFiltrados, {/*setRelatoriosFiltrados*/ }] = useState(mockData);
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm<relatorioFilterSchemaData>({
-        resolver: zodResolver(relatorioFilterSchema),
-    });
-
-    const onSubmit = (data: relatorioFilterSchemaData) => {
-        console.log("Dados do filtro", data);
-        // Aqui você pode fazer a chamada para a API com os dados do formulário.
+  useEffect(() => {
+    const fetchCapacitacoes = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await getCapacitacao();
+        setDados(response);
+      } catch {
+        setError("Erro ao carregar capacitações.");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    return (
-        <div className="p-4 max-w-4xl mx-auto">
-            <h2 className="text-xl font-bold mb-4">Relatórios Servidores</h2>
-            <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                {/* Nome */}
-                <div>
-                    <Input placeholder="Nome"  {...register("nome")} />
-                    {errors.nome && <span className="text-red-500 text-sm">{errors.nome.message}</span>}
-                </div>
+    fetchCapacitacoes();
+  }, []);
 
-                {/* Tipo */}
-                <div>
-                    <Select onValueChange={(value) => setValue("tipo", value as relatorioFilterSchemaData["tipo"])}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Tipo de Relatório" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="Capacitação">Capacitação</SelectItem>
-                            <SelectItem value="Folga">Folga</SelectItem>
-                            <SelectItem value="Pecúnia">Pecúnia</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    {errors.tipo && <span className="text-red-500 text-sm">{errors.tipo.message}</span>}
-                </div>
+  if (loading) return <p>Carregando capacitações...</p>;
+  if (error) return <p className="text-red-600">{error}</p>;
 
-                {/* Status */}
-                <div>
-                    <Select onValueChange={(value) => setValue("status", value as relatorioFilterSchemaData["status"])}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="Aprovado">Aprovado</SelectItem>
-                            <SelectItem value="Rejeitado">Rejeitado</SelectItem>
-                            <SelectItem value="Pendente">Pendente</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
+  return (
+    <div className="p-4 max-w-5xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Capacitações Cadastradas</h1>
 
-                {/* Botão de Submit */}
-                <div>
-                    <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
-                        Filtrar
-                    </Button>
-                </div>
-            </form>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Diretoria</TableHead>
+            <TableHead>Nome do Curso</TableHead>
+            <TableHead>Data Inicial</TableHead>
+            <TableHead>Data Final</TableHead>
+            <TableHead>Situação</TableHead>
+            <TableHead>Certificado</TableHead>
+          </TableRow>
+        </TableHeader>
 
-            <div className="grid gap-4">
-                {relatoriosFiltrados.length > 0 ? (
-                    relatoriosFiltrados.map((item) => (
-                        <div key={item.id} className="p-4 border rounded shadow">
-                            <h3 className="font-semibold">{item.name}</h3>
-                            <p>{item.description}</p>
-                            <p className="text-sm text-gray-500">
-                                Tipo: {item.tipo} | Status: {item.status} | Data: {item.data}
-                            </p>
-                        </div>
-                    ))
-                ) : (
-                    <p className="text-center text-gray-500">Nenhum relatório encontrado.</p>
-                )}
-            </div>
-        </div>
-    );
+        <TableBody>
+          {dados.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={6} className="text-center">
+                Nenhuma capacitação encontrada.
+              </TableCell>
+            </TableRow>
+          ) : (
+            dados.map((capacitacao) => (
+              <TableRow key={capacitacao.id}>
+                <TableCell>{capacitacao.diretoria?.nome}</TableCell>
+                <TableCell>{capacitacao.nome}</TableCell>
+                <TableCell>
+                  {new Date(capacitacao.inicioCurso).toLocaleDateString()}
+                </TableCell>
+                <TableCell>
+                  {new Date(capacitacao.finalCurso).toLocaleDateString()}
+                </TableCell>
+                <TableCell>{capacitacao.situacao}</TableCell>
+                <TableCell>
+                  {capacitacao.resourceUrl ? (
+                    <Link href={capacitacao.resourceUrl} target="_blank">
+                      <Button variant="outline" size="sm">
+                        Ver PDF
+                      </Button>
+                    </Link>
+                  ) : (
+                    <span>—</span>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
+    </div>
+  );
 }
