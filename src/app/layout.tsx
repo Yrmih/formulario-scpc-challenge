@@ -1,9 +1,9 @@
 
 import { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Header from "./(conteudo)/Layout/Header/page";
+import Header from "./(painel)/Layout/Header/page";
 
-import SidebarPage from "./(conteudo)/Layout/Sidebar/page";
+import SidebarPage from "./(painel)/Layout/Sidebar/page";
 import "./globals.css";
 
 

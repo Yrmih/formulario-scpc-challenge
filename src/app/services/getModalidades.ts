@@ -7,7 +7,7 @@ export async function getModalidades() {
         const response = await fetch(url, {
             method : 'GET',
             headers: {
-                'Authoriztion': process.env.NEXT_PUBLIC_API_TOKEN || '',
+                'Authoriztion': `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN} ?? ''`,
                 'Content-Type': 'application/json',
             },
             cache: 'no-store',

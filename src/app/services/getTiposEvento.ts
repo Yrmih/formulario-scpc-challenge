@@ -5,7 +5,7 @@ export async function getTiposEvento() {
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN || ''}`,
+        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN ?? ''}`,
         'Content-Type': 'application/json',
       },
       cache: 'no-store',
