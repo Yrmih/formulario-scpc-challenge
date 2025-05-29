@@ -1,9 +1,9 @@
 'use client';
 
-import RelatoriosServidores from "../../components/shared/dataTableRelatorio";
+import RelatoriosServidores from "../../shared/components/dataTableRelatorio";
 
-export default function RelatoriosPage(){
-    return(
+export default function RelatoriosPage() {
+    return (
         <div>
             <h1>Relatórios</h1>
             <p>Esta página está em construção.</p>

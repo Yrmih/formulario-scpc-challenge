@@ -1,11 +1,11 @@
 'use client';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFolder, faDollarSign, faGraduationCap, faChartBar, faCog, faAngleLeft, faAngleRight} from '@fortawesome/free-solid-svg-icons';
+import { faFolder, faDollarSign, faGraduationCap, faChartBar, faCog, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react';
-import Link from 'next/link'; 
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';  // Hook para pegar o pathname
-import { cn } from '@/lib/utils';  // Função cn para manipulação de classes
+import { cn } from '../../utils/utils';  // Função cn para manipulação de classes
 
 export default function Sidebar() {
   console.log('teste!!!')

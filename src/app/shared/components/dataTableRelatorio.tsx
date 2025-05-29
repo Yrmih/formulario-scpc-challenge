@@ -4,9 +4,9 @@ import { relatorioFilterSchema, relatorioFilterSchemaData } from "../../schemas/
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
+import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Select, SelectTrigger, SelectItem, SelectValue, SelectContent } from "@/components/ui/select";
+import { Select, SelectTrigger, SelectItem, SelectValue, SelectContent } from "../ui/select";
 
 const mockData = [
     { id: 1, name: 'Noemy Amorim', description: 'Descrição do Relatório 1', tipo: 'Relatório de Servidores', data: '2023-10-01', status: 'Aprovado' },
@@ -16,7 +16,7 @@ const mockData = [
 ];
 
 export default function RelatoriosServidores() {
-    const [relatoriosFiltrados, {/*setRelatoriosFiltrados*/}] = useState(mockData);
+    const [relatoriosFiltrados, {/*setRelatoriosFiltrados*/ }] = useState(mockData);
     const { register, handleSubmit, setValue, formState: { errors } } = useForm<relatorioFilterSchemaData>({
         resolver: zodResolver(relatorioFilterSchema),
     });

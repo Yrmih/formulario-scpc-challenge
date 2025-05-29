@@ -3,16 +3,17 @@ import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { formSchema, CapacitacaoFormData } from '../../schemas/formValidation';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from '@/components/ui/select';
+import { Button } from '../ui/buttoon';
+import { Input } from '../ui/input';
+import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from '../ui/select';
 import { ObjectUtils } from '../../utils/objectsUtils';
-import { 
-  getAreasConhecimento, 
-  getDiretorias, 
-  getTiposEvento, 
+import {
+  getAreasConhecimento,
+  getDiretorias,
+  getTiposEvento,
   getModalidades,
-  postCadastrarCapacitacao 
+  postCapacitacao,
+  getCapacitacao
 } from '../../services/api';
 
 interface Item {
@@ -25,7 +26,6 @@ interface FormCapacitacaoProps {
 }
 
 export default function FormCapacitacao({ onSuccess }: Readonly<FormCapacitacaoProps>) {
-  // Estados agora recebem array de objetos {id, nome}
   const [diretoria, setDiretoria] = useState<Item[]>([]);
   const [areasConhecimento, setAreasConhecimento] = useState<Item[]>([]);
   const [tiposEventos, setTiposEventos] = useState<Item[]>([]);
@@ -34,7 +34,6 @@ export default function FormCapacitacao({ onSuccess }: Readonly<FormCapacitacaoP
   useEffect(() => {
     async function fetchOpcoes() {
       try {
-        // Pegando os dados diretamente das funções que fazem fetch na API
         const [resDir, resAreas, resTipos, resModalidades] = await Promise.all([
           getDiretorias(),
           getAreasConhecimento(),
@@ -49,7 +48,19 @@ export default function FormCapacitacao({ onSuccess }: Readonly<FormCapacitacaoP
         console.error('Erro ao buscar opções:', error);
       }
     }
+
+    async function fetchCapacitacoes() {
+      try {
+        const capacitacoes = await getCapacitacao();
+        console.log('Capacitações cadastradas:', capacitacoes);
+        // Caso queira guardar no estado, pode criar um estado para isso
+      } catch (error) {
+        console.error('Erro ao buscar capacitações:', error);
+      }
+    }
+
     fetchOpcoes();
+    fetchCapacitacoes();
   }, []);
 
   const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<CapacitacaoFormData>({
@@ -63,7 +74,7 @@ export default function FormCapacitacao({ onSuccess }: Readonly<FormCapacitacaoP
       diretoria: formData.diretoria,
       areaConhecimento: formData.areaConhecimento,
       tipoEvento: formData.tipoEvento,
-      modalidade: formData.modalidade,  // novo campo modalidades
+      modalidade: formData.modalidade,
       tituloEvento: formData.tituloEvento,
       cargaHoraria: formData.cargaHoraria,
       instituicao: formData.instituicao,
@@ -77,7 +88,7 @@ export default function FormCapacitacao({ onSuccess }: Readonly<FormCapacitacaoP
     });
 
     try {
-      await postCadastrarCapacitacao(formattedData);
+      await postCapacitacao(formattedData);
       alert('Capacitação cadastrada com sucesso!');
       reset();
       if (onSuccess) {
@@ -139,7 +150,7 @@ export default function FormCapacitacao({ onSuccess }: Readonly<FormCapacitacaoP
         {errors.tipoEvento && <span className="text-red-500 text-sm">{errors.tipoEvento.message}</span>}
       </div>
 
-      {/* Modalidade - NOVO CAMPO */}
+      {/* Modalidade */}
       <div className="col-span-1">
         <label htmlFor="modalidade" className="block text-sm font-medium text-gray-700">Modalidade</label>
         <Select onValueChange={(value) => setValue("modalidade", value)}>

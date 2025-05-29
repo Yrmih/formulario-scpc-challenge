@@ -1,16 +1,16 @@
-import FormCapacitacao from "../../components/shared/FormCapacitacao"
-import RelatoriosServidores from "../../components/shared/dataTableRelatorio"
+import FormCapacitacao from "../../shared/components/FormCapacitacao"
+import RelatoriosServidores from "../../shared/components/dataTableRelatorio"
 import { useState } from "react";
 
-export default function CapacitacaoFormPage(){
+export default function CapacitacaoFormPage() {
     const [capacitacoes, setCapacitacoes] = useState([]);
 
     const handleCapacitacaoCadastrada = (novaCapacitacao: any) => {
         setCapacitacoes((prev) => [novaCapacitacao, ...prev]);
     }
-    return(
+    return (
         <div>
-            <FormCapacitacao/>
+            <FormCapacitacao />
             <RelatoriosServidores />
         </div>
     )
